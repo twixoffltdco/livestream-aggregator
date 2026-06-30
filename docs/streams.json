@@ -1,7 +1,78 @@
 {
-  "updated_at": null,
-  "total_channels": 0,
+  "updated_at": "2026-06-30T04:16:24.116139Z",
+  "total_channels": 5,
   "live_now": 0,
-  "repo": "OinkTechLLC/livestream-aggregator",
-  "streams": []
+  "repo": "twixoffltdco/livestream-aggregator",
+  "streams": [
+    {
+      "name": "NASA Live",
+      "platform": "youtube",
+      "source_url": "https://www.youtube.com/@NASA/live",
+      "logo": "",
+      "category": "science",
+      "is_live": false,
+      "stream_url": "",
+      "title": "",
+      "viewer_count": null,
+      "thumbnail": "",
+      "checked_at": "2026-06-30T04:16:21.196719Z",
+      "error": "empty info"
+    },
+    {
+      "name": "Пример Rutube канала",
+      "platform": "rutube",
+      "source_url": "https://rutube.ru/live/example_channel/",
+      "logo": "",
+      "category": "entertainment",
+      "is_live": false,
+      "stream_url": "",
+      "title": "",
+      "viewer_count": null,
+      "thumbnail": "",
+      "checked_at": "2026-06-30T04:16:21.197253Z",
+      "error": "empty info"
+    },
+    {
+      "name": "Пример Twitch канала",
+      "platform": "twitch",
+      "source_url": "https://www.twitch.tv/example_channel",
+      "logo": "",
+      "category": "gaming",
+      "is_live": false,
+      "stream_url": "",
+      "title": "",
+      "viewer_count": null,
+      "thumbnail": "",
+      "checked_at": "2026-06-30T04:16:21.197477Z",
+      "error": "empty info"
+    },
+    {
+      "name": "Пример VK канала",
+      "platform": "vk",
+      "source_url": "https://vk.com/video/@example_channel",
+      "logo": "",
+      "category": "entertainment",
+      "is_live": false,
+      "stream_url": "",
+      "title": "",
+      "viewer_count": null,
+      "thumbnail": "",
+      "checked_at": "2026-06-30T04:16:21.197028Z",
+      "error": "empty info"
+    },
+    {
+      "name": "Россия 24",
+      "platform": "youtube",
+      "source_url": "https://www.youtube.com/@Russia24TV/live",
+      "logo": "https://yt3.googleusercontent.com/ytc/AIdro_kPlaceholder=s176-c-k-c0x00ffffff-no-rj",
+      "category": "news",
+      "is_live": false,
+      "stream_url": "",
+      "title": "",
+      "viewer_count": null,
+      "thumbnail": "",
+      "checked_at": "2026-06-30T04:16:21.196363Z",
+      "error": "empty info"
+    }
+  ]
 }
