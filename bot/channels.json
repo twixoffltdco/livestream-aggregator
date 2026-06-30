@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Россия 24",
+    "platform": "youtube",
+    "url": "https://www.youtube.com/@Russia24TV/live",
+    "logo": "https://yt3.googleusercontent.com/ytc/AIdro_kPlaceholder=s176-c-k-c0x00ffffff-no-rj",
+    "category": "news"
+  },
+  {
+    "name": "NASA Live",
+    "platform": "youtube",
+    "url": "https://www.youtube.com/@NASA/live",
+    "logo": "",
+    "category": "science"
+  },
+  {
+    "name": "Пример VK канала",
+    "platform": "vk",
+    "url": "https://vk.com/video/@example_channel",
+    "logo": "",
+    "category": "entertainment"
+  },
+  {
+    "name": "Пример Rutube канала",
+    "platform": "rutube",
+    "url": "https://rutube.ru/live/example_channel/",
+    "logo": "",
+    "category": "entertainment"
+  },
+  {
+    "name": "Пример Twitch канала",
+    "platform": "twitch",
+    "url": "https://www.twitch.tv/example_channel",
+    "logo": "",
+    "category": "gaming"
+  }
+]

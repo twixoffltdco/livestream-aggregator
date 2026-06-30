@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LiveAggregator — прямые эфиры в одном плейлисте</title>
+<meta name="description" content="Агрегатор прямых трансляций с YouTube, VK, Rutube и Twitch. Обновляется каждые 30 минут.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.15/hls.min.js"></script>
+<style>
+  :root{
+    --bg:#0B0D10;
+    --panel:#13161B;
+    --panel-edge:#1F242C;
+    --text:#EDEAE3;
+    --text-dim:#8B92A0;
+    --on-air:#FF2D2D;
+    --offline:#3A4049;
+    --accent:#00D9C0;
+    --mono:'JetBrains Mono', monospace;
+    --display:'Bebas Neue', sans-serif;
+    --body:'Inter', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--body);
+    background-image:
+      radial-gradient(ellipse at top, rgba(255,45,45,0.06), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
+  }
+
+  /* Top ticker */
+  .ticker{
+    background:#000; border-bottom:1px solid var(--panel-edge);
+    padding:8px 0; overflow:hidden; white-space:nowrap; position:sticky; top:0; z-index:50;
+  }
+  .ticker-inner{display:inline-block; animation:scroll 30s linear infinite; font-family:var(--mono); font-size:12px; letter-spacing:0.04em; color:var(--text-dim);}
+  .ticker-inner span{margin-right:48px;}
+  .ticker .dot{color:var(--on-air);}
+  @keyframes scroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  header{
+    max-width:1180px; margin:0 auto; padding:56px 24px 32px;
+    display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap;
+  }
+  .brand-eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:0.12em; color:var(--on-air); text-transform:uppercase; display:flex; align-items:center; gap:8px;}
+  .pulse{width:8px; height:8px; border-radius:50%; background:var(--on-air); animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1; box-shadow:0 0 0 0 rgba(255,45,45,.5);} 50%{opacity:.5; box-shadow:0 0 0 6px rgba(255,45,45,0);} }
+  h1{font-family:var(--display); font-size:clamp(40px,7vw,76px); line-height:0.92; letter-spacing:0.01em; margin-top:6px;}
+  h1 em{font-style:normal; color:var(--accent);}
+  .sub{color:var(--text-dim); max-width:480px; font-size:15px; line-height:1.55; margin-top:10px;}
+
+  .stats{display:flex; gap:28px; font-family:var(--mono);}
+  .stat-num{font-size:34px; font-weight:600; color:var(--accent); line-height:1;}
+  .stat-num.live{color:var(--on-air);}
+  .stat-label{font-size:11px; color:var(--text-dim); letter-spacing:0.08em; text-transform:uppercase; margin-top:4px;}
+
+  .toolbar{
+    max-width:1180px; margin:0 auto; padding:0 24px 28px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  }
+  .btn{
+    font-family:var(--mono); font-size:13px; letter-spacing:0.03em; text-decoration:none;
+    padding:11px 18px; border-radius:3px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:1px solid transparent;
+    transition:transform .12s ease, background .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--accent); color:#04211C; font-weight:600;}
+  .btn-ghost{background:transparent; border-color:var(--panel-edge); color:var(--text);}
+  .btn-ghost:hover{border-color:var(--accent); color:var(--accent);}
+  .updated-at{font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-left:auto;}
+
+  .filters{display:flex; gap:8px; flex-wrap:wrap; padding:0 24px 8px; max-width:1180px; margin:0 auto;}
+  .chip{
+    font-family:var(--mono); font-size:12px; padding:7px 14px; border-radius:999px; border:1px solid var(--panel-edge);
+    color:var(--text-dim); cursor:pointer; background:transparent; transition:all .12s ease;
+  }
+  .chip.active, .chip:hover{border-color:var(--accent); color:var(--accent);}
+
+  main{max-width:1180px; margin:0 auto; padding:20px 24px 80px;}
+
+  .player-stage{
+    background:var(--panel); border:1px solid var(--panel-edge); border-radius:6px; overflow:hidden; margin-bottom:36px;
+    display:none;
+  }
+  .player-stage.active{display:block;}
+  .player-head{display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--panel-edge);}
+  .player-head .name{font-family:var(--display); font-size:22px; letter-spacing:0.02em;}
+  .player-head .close{cursor:pointer; color:var(--text-dim); font-family:var(--mono); font-size:12px; border:1px solid var(--panel-edge); padding:6px 10px; border-radius:3px;}
+  .player-head .close:hover{color:var(--on-air); border-color:var(--on-air);}
+  video{width:100%; aspect-ratio:16/9; background:#000; display:block;}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(290px,1fr)); gap:16px;}
+
+  .card{
+    background:var(--panel); border:1px solid var(--panel-edge); border-radius:5px; overflow:hidden;
+    cursor:pointer; transition:border-color .12s ease, transform .12s ease;
+    display:flex; flex-direction:column;
+  }
+  .card:hover{border-color:var(--accent); transform:translateY(-2px);}
+  .card.is-offline{opacity:0.45; cursor:default;}
+  .card.is-offline:hover{transform:none; border-color:var(--panel-edge);}
+  .thumb{aspect-ratio:16/9; background:#000 center/cover no-repeat; position:relative;}
+  .thumb .badge{
+    position:absolute; top:10px; left:10px; font-family:var(--mono); font-size:10px; letter-spacing:0.06em;
+    padding:4px 8px; border-radius:3px; text-transform:uppercase; display:flex; align-items:center; gap:5px;
+  }
+  .badge.on-air{background:var(--on-air); color:#fff;}
+  .badge.off-air{background:rgba(0,0,0,0.6); color:var(--text-dim); border:1px solid var(--panel-edge);}
+  .thumb .platform{position:absolute; bottom:10px; right:10px; font-family:var(--mono); font-size:10px; background:rgba(0,0,0,.65); padding:3px 7px; border-radius:3px; text-transform:uppercase; letter-spacing:0.05em;}
+  .card-body{padding:14px 16px 16px; flex:1; display:flex; flex-direction:column; gap:4px;}
+  .card-name{font-family:var(--display); font-size:19px; letter-spacing:0.01em;}
+  .card-title{font-size:12.5px; color:var(--text-dim); line-height:1.4; min-height:17px;}
+
+  .empty{font-family:var(--mono); color:var(--text-dim); text-align:center; padding:60px 0; font-size:13px;}
+
+  footer{
+    border-top:1px solid var(--panel-edge); padding:32px 24px; max-width:1180px; margin:0 auto;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; color:var(--text-dim); font-size:12.5px; font-family:var(--mono);
+  }
+  footer a{color:var(--accent); text-decoration:none;}
+
+  @media(max-width:640px){
+    header{padding:36px 18px 24px;}
+    .stats{gap:18px;}
+    .updated-at{margin-left:0; width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ticker">
+  <div class="ticker-inner" id="tickerText">
+    <span><span class="dot">●</span> ЗАГРУЗКА ДАННЫХ...</span>
+  </div>
+</div>
+
+<header>
+  <div>
+    <div class="brand-eyebrow"><span class="pulse"></span> Агрегатор прямых эфиров</div>
+    <h1>LIVE<em>Aggregator</em></h1>
+    <p class="sub">Бот каждые 30 минут проверяет YouTube, VK, Rutube и Twitch и собирает один плейлист со всеми, кто <strong>сейчас в эфире</strong>. Смотри прямо здесь или скачай M3U и подключи в свой плеер / сайт.</p>
+  </div>
+  <div class="stats">
+    <div>
+      <div class="stat-num live" id="statLive">—</div>
+      <div class="stat-label">в эфире</div>
+    </div>
+    <div>
+      <div class="stat-num" id="statTotal">—</div>
+      <div class="stat-label">каналов всего</div>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <a class="btn btn-primary" id="downloadBtn" href="playlist.m3u8" download="livestreams.m3u8">⭳ Скачать плейлист (.m3u8)</a>
+  <a class="btn btn-ghost" id="rawJsonBtn" href="streams.json" target="_blank">{ } Открыть JSON</a>
+  <a class="btn btn-ghost" href="https://github.com/OinkTechLLC/livestream-aggregator" target="_blank">★ Репозиторий на GitHub</a>
+  <div class="updated-at" id="updatedAt">обновление: —</div>
+</div>
+
+<div class="filters" id="filters"></div>
+
+<main>
+  <div class="player-stage" id="playerStage">
+    <div class="player-head">
+      <div class="name" id="playerName">—</div>
+      <div class="close" id="playerClose">✕ ЗАКРЫТЬ</div>
+    </div>
+    <video id="video" controls autoplay playsinline></video>
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="empty">Загружаем список трансляций…</div>
+  </div>
+</main>
+
+<footer>
+  <div>LiveAggregator — открытый агрегатор прямых трансляций. Не хранит и не размещает контент, только публичные ссылки на потоки.</div>
+  <div><a href="https://github.com/OinkTechLLC/livestream-aggregator">github.com/OinkTechLLC/livestream-aggregator</a></div>
+</footer>
+
+<script>
+let hlsInstance = null;
+let currentFilter = 'all';
+let streamsData = [];
+
+async function loadData(){
+  try{
+    const res = await fetch('streams.json?_=' + Date.now());
+    const data = await res.json();
+    streamsData = data.streams || [];
+    renderStats(data);
+    renderTicker(streamsData);
+    renderFilters(streamsData);
+    renderGrid();
+  }catch(e){
+    document.getElementById('grid').innerHTML = '<div class="empty">Не удалось загрузить streams.json. Бот ещё не сделал первый запуск?</div>';
+  }
+}
+
+function renderStats(data){
+  document.getElementById('statLive').textContent = data.live_now ?? 0;
+  document.getElementById('statTotal').textContent = data.total_channels ?? 0;
+  if(data.updated_at){
+    const d = new Date(data.updated_at);
+    document.getElementById('updatedAt').textContent = 'обновлено: ' + d.toLocaleString('ru-RU') + ' UTC';
+  }
+}
+
+function renderTicker(streams){
+  const live = streams.filter(s => s.is_live);
+  const el = document.getElementById('tickerText');
+  if(live.length === 0){
+    el.innerHTML = '<span><span class="dot">●</span> сейчас никто не транслирует — следующая проверка через 30 минут</span>';
+    return;
+  }
+  const items = live.map(s => `<span><span class="dot">●</span> ${escapeHtml(s.name)} — ${escapeHtml(s.title || 'идёт трансляция')}</span>`).join('');
+  el.innerHTML = items + items; // дублируем для бесшовной прокрутки
+}
+
+function renderFilters(streams){
+  const cats = ['all', ...new Set(streams.map(s => s.category || 'other'))];
+  const el = document.getElementById('filters');
+  el.innerHTML = cats.map(c => `<button class="chip ${c==='all'?'active':''}" data-cat="${c}">${c==='all'?'Все':c}</button>`).join('');
+  el.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      el.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentFilter = chip.dataset.cat;
+      renderGrid();
+    });
+  });
+}
+
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  const filtered = currentFilter === 'all' ? streamsData : streamsData.filter(s => (s.category||'other') === currentFilter);
+  if(filtered.length === 0){
+    grid.innerHTML = '<div class="empty">Каналов в этой категории пока нет.</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map((s, i) => `
+    <div class="card ${s.is_live ? '' : 'is-offline'}" data-index="${streamsData.indexOf(s)}">
+      <div class="thumb" style="background-image:url('${escapeAttr(s.thumbnail || s.logo || '')}')">
+        <div class="badge ${s.is_live ? 'on-air' : 'off-air'}">${s.is_live ? '● в эфире' : 'офлайн'}</div>
+        <div class="platform">${escapeHtml(s.platform)}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${escapeHtml(s.name)}</div>
+        <div class="card-title">${escapeHtml(s.is_live ? (s.title || '') : 'нет прямого эфира')}</div>
+      </div>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = card.dataset.index;
+      const s = streamsData[idx];
+      if(s.is_live && s.stream_url) playStream(s);
+    });
+  });
+}
+
+function playStream(s){
+  const stage = document.getElementById('playerStage');
+  const video = document.getElementById('video');
+  document.getElementById('playerName').textContent = s.name;
+  stage.classList.add('active');
+  stage.scrollIntoView({behavior:'smooth', block:'start'});
+
+  if(hlsInstance){ hlsInstance.destroy(); hlsInstance = null; }
+
+  if(video.canPlayType('application/vnd.apple.mpegurl')){
+    video.src = s.stream_url;
+  } else if(window.Hls && Hls.isSupported()){
+    hlsInstance = new Hls();
+    hlsInstance.loadSource(s.stream_url);
+    hlsInstance.attachMedia(video);
+  } else {
+    video.src = s.stream_url;
+  }
+  video.play().catch(()=>{});
+}
+
+document.getElementById('playerClose').addEventListener('click', () => {
+  const stage = document.getElementById('playerStage');
+  const video = document.getElementById('video');
+  video.pause();
+  video.removeAttribute('src');
+  if(hlsInstance){ hlsInstance.destroy(); hlsInstance = null; }
+  stage.classList.remove('active');
+});
+
+function escapeHtml(str){
+  return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function escapeAttr(str){ return escapeHtml(str); }
+
+loadData();
+setInterval(loadData, 5 * 60 * 1000); // подтягиваем свежие данные раз в 5 минут на странице
+</script>
+
+</body>
+</html>
