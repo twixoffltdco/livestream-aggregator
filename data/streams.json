@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-02T12:03:02.264881Z",
+  "updated_at": "2026-08-02T14:08:21.802805Z",
   "total_channels": 5,
   "live_now": 0,
   "repo": "twixoffltdco/livestream-aggregator",
@@ -15,7 +15,7 @@
       "title": "",
       "viewer_count": null,
       "thumbnail": "",
-      "checked_at": "2026-08-02T12:02:59.718909Z",
+      "checked_at": "2026-08-02T14:08:19.085237Z",
       "error": "empty info"
     },
     {
@@ -29,7 +29,7 @@
       "title": "",
       "viewer_count": null,
       "thumbnail": "",
-      "checked_at": "2026-08-02T12:02:59.719418Z",
+      "checked_at": "2026-08-02T14:08:19.085805Z",
       "error": "empty info"
     },
     {
@@ -43,7 +43,7 @@
       "title": "",
       "viewer_count": null,
       "thumbnail": "",
-      "checked_at": "2026-08-02T12:02:59.719723Z",
+      "checked_at": "2026-08-02T14:08:19.086065Z",
       "error": "empty info"
     },
     {
@@ -57,7 +57,7 @@
       "title": "",
       "viewer_count": null,
       "thumbnail": "",
-      "checked_at": "2026-08-02T12:02:59.719141Z",
+      "checked_at": "2026-08-02T14:08:19.085545Z",
       "error": "empty info"
     },
     {
@@ -71,7 +71,7 @@
       "title": "",
       "viewer_count": null,
       "thumbnail": "",
-      "checked_at": "2026-08-02T12:02:59.718551Z",
+      "checked_at": "2026-08-02T14:08:19.084979Z",
       "error": "empty info"
     }
   ]
