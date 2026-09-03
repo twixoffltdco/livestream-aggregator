@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-09-03T11:32:26.528415Z",
+  "updated_at": "2026-09-03T15:54:35.091224Z",
   "total_channels": 5,
-  "live_now": 1,
+  "live_now": 0,
   "repo": "twixoffltdco/livestream-aggregator",
   "streams": [
     {
@@ -10,13 +10,13 @@
       "source_url": "https://www.youtube.com/@NASA/live",
       "logo": "",
       "category": "science",
-      "is_live": true,
-      "stream_url": "https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1788456746/ei/ylqZap2LBtiWsfIPoPyOuAQ/ip/172.184.219.81/id/M3HKLzjvKPc.9/itag/300/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D298/rqh/1/hls_chunk_host/rr5---sn-aj2im9-5q.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/bui/AR3QkAlMsT5ZV1GenI_DuDe4QuNw4nPbJFuvk7yRbWCsOPG0pqiBwv2UqA7YZ_tWb7YnkS7ux11Ic4_O/spc/I-rgIVLV5K6z3O34N6POSY6RDUSgwlOP6403dPEHoa0s2eeYjX0xtg/vprv/1/reg/0/playlist_type/DVR/met/1788435146,/mh/he/mm/44/mn/sn-aj2im9-5q/ms/lva/mv/u/mvi/5/pl/15/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51565115,52135441/mt/1788434688/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,bui,spc,vprv,reg,playlist_type/sig/AE0s2JYwRQIhAJ-Eh-UOQEwpDsP4b1ghMMOsmIRsBNVGH-j7wY_kPgIAAiA57UWypErkYuxkIZpwxFEgnNEP_rbKzGO4bMZ2pMhoPg%3D%3D/lsparams/hls_chunk_host,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIgESh0oSfRu-sbcn4VQBVlfNMhRt4fT6-3Bt-fK9ttbkMCIQDwWBf5pena8PQYHCCe4O76g_sS372dtUCFS6m020bBCw%3D%3D/playlist/index.m3u8",
-      "title": "Live Video from the International Space Station (Official NASA Stream) 2026-09-03 11:32",
-      "viewer_count": 114,
-      "thumbnail": "https://i.ytimg.com/vi/M3HKLzjvKPc/maxresdefault.jpg",
-      "checked_at": "2026-09-03T11:32:23.627012Z",
-      "error": null
+      "is_live": false,
+      "stream_url": "",
+      "title": "",
+      "viewer_count": null,
+      "thumbnail": "",
+      "checked_at": "2026-09-03T15:54:32.361163Z",
+      "error": "empty info"
     },
     {
       "name": "Пример Rutube канала",
@@ -29,7 +29,7 @@
       "title": "",
       "viewer_count": null,
       "thumbnail": "",
-      "checked_at": "2026-09-03T11:32:23.627764Z",
+      "checked_at": "2026-09-03T15:54:32.361778Z",
       "error": "empty info"
     },
     {
@@ -43,7 +43,7 @@
       "title": "",
       "viewer_count": null,
       "thumbnail": "",
-      "checked_at": "2026-09-03T11:32:23.628081Z",
+      "checked_at": "2026-09-03T15:54:32.362074Z",
       "error": "empty info"
     },
     {
@@ -57,7 +57,7 @@
       "title": "",
       "viewer_count": null,
       "thumbnail": "",
-      "checked_at": "2026-09-03T11:32:23.627388Z",
+      "checked_at": "2026-09-03T15:54:32.361504Z",
       "error": "empty info"
     },
     {
@@ -71,7 +71,7 @@
       "title": "",
       "viewer_count": null,
       "thumbnail": "",
-      "checked_at": "2026-09-03T11:32:23.626594Z",
+      "checked_at": "2026-09-03T15:54:32.360748Z",
       "error": "empty info"
     }
   ]
